@@ -175,9 +175,55 @@
         .time-selector {
             margin-bottom: 15px;
         }
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .password-modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .password-form {
+            margin-top: 20px;
+        }
+        .password-error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Password Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-modal-content">
+            <h3><i class="fas fa-lock me-2"></i>Enter Password</h3>
+            <p>Please enter the password to access the Summary Report.</p>
+            
+            <div class="password-form">
+                <div class="form-group">
+                    <label for="passwordInput">Password:</label>
+                    <input type="password" id="passwordInput" class="form-control" placeholder="Enter password">
+                </div>
+                <div class="password-error" id="passwordError">
+                    Incorrect password. Please try again.
+                </div>
+                <button class="btn btn-primary w-100" onclick="checkPassword()">Submit</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <img src="Papa-Johns.png" alt="Papa-Johns.png" width="70" height="50">
@@ -192,7 +238,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="false">
+                <button class="nav-link" id="reports-tab" onclick="showPasswordModal()" type="button">
                     <i class="fas fa-chart-bar me-2"></i>Summary Report
                 </button>
             </li>
@@ -891,8 +937,6 @@
                         <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
                     </div>
                 </div>
-
-
                 <!-- Add other branches similarly -->
 
                 <a href="#" class="export-btn" onclick="generateSummaryReport()"> Send Data </a>
@@ -957,19 +1001,27 @@
                             <tbody id="grandTotalBody">
                                 <tr>
                                     <td>Total Daily Sales</td>
-                                    <td id="totalDailySales">0</td>
+                                    <td id="totalDailySales">0.00</td>
                                 </tr>
                                 <tr>
                                     <td>Total Daily T.C</td>
-                                    <td id="totalDailyOperations">0</td>
+                                    <td id="totalDailyOperations">0.00</td>
+                                </tr>
+                                <tr class="grand-total-row">
+                                    <td>Total Daily Revenue</td>
+                                    <td id="totalDailyRevenue">0.00</td>
                                 </tr>
                                 <tr>
                                     <td>Total Monthly Sales</td>
-                                    <td id="totalMonthlySales">0</td>
+                                    <td id="totalMonthlySales">0.00</td>
                                 </tr>
                                 <tr>
                                     <td>Total Monthly Operations</td>
-                                    <td id="totalMonthlyOperations">0</td>
+                                    <td id="totalMonthlyOperations">0.00</td>
+                                </tr>
+                                <tr class="grand-total-row">
+                                    <td>Total Monthly Revenue</td>
+                                    <td id="totalMonthlyRevenue">0.00</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -986,6 +1038,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // كلمة المرور الافتراضية (يمكن تغييرها)
+        const CORRECT_PASSWORD = "Papa2025";
+        let authenticated = false;
+        
         // بيانات التخزين للفروع مع المواقيت
         const branchData = {
             "amwaj": { 
@@ -1139,6 +1195,44 @@
                 currentTime: ""
             }
         };
+
+        // عرض نافذة كلمة المرور
+        function showPasswordModal() {
+            if (!authenticated) {
+                document.getElementById('passwordModal').style.display = 'flex';
+                document.getElementById('passwordError').style.display = 'none';
+                document.getElementById('passwordInput').value = '';
+            } else {
+                // إذا كان المستخدم مصادقًا بالفعل، انتقل مباشرة إلى التقارير
+                switchToReportsTab();
+            }
+        }
+
+        // التحقق من كلمة المرور
+        function checkPassword() {
+            const passwordInput = document.getElementById('passwordInput').value;
+            const passwordError = document.getElementById('passwordError');
+            
+            if (passwordInput === CORRECT_PASSWORD) {
+                authenticated = true;
+                document.getElementById('passwordModal').style.display = 'none';
+                switchToReportsTab();
+                generateSummaryReport();
+            } else {
+                passwordError.style.display = 'block';
+            }
+        }
+
+        // الانتقال إلى تبويب التقارير
+        function switchToReportsTab() {
+            // تفعيل تبويب التقارير
+            document.getElementById('reports-tab').classList.add('active');
+            document.getElementById('home-tab').classList.remove('active');
+            
+            // إظهار محتوى التقارير وإخفاء المحتوى الرئيسي
+            document.getElementById('reports').classList.add('show', 'active');
+            document.getElementById('home').classList.remove('show', 'active');
+        }
 
         // تحديث الساعة والتاريخ
         function updateClock() {
@@ -1301,14 +1395,10 @@
             document.getElementById('totalDailySales').textContent = totalDailySales.toFixed(0);
             document.getElementById('totalDailyOperations').textContent = totalDailyOperations.toFixed(0);
             
+            
             document.getElementById('totalMonthlySales').textContent = totalMonthlySales.toFixed(0);
             document.getElementById('totalMonthlyOperations').textContent = totalMonthlyOperations.toFixed(0);
             
-            // الانتقال إلى تبويب التقارير
-            const reportsTab = new bootstrap.Tab(document.getElementById('reports-tab'));
-            reportsTab.show();
-            
-            alert('Data has been sent successfully!');
         }
         
         // دالة لتحويل اسم الفرع إلى صيغة مناسبة للعرض
@@ -1333,6 +1423,21 @@
             
             return names[key] || key;
         }
+
+        // إغلاق نافذة كلمة المرور عند النقر خارجها
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('passwordModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // السماح بالضغط على Enter في حقل كلمة المرور
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
     </script>
 
 </body>
