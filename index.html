@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Sales Papa John's Alex</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: ltr;
+            background-color: #c9c8c8;
+            padding: 25px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        select, button, input {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        .branch-section {
+            display: none;
+        }
+        .branch-section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            padding: 8px;
+            width: 100%;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .export-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #ff0000;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+        }
+        .export-btn:hover {
+            background-color: #cc0000;
+        }
+        .clock {
+            background: #ffffff;
+            font-size: 20px;
+            color: #ff0000;
+            text-align: center;
+            letter-spacing: 1px;
+            margin: 0 auto 20px;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .summary-table {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+        }
+        .nav-tabs .nav-link {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .monthly-section {
+            display: none;
+            background-color: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #3498db;
+        }
+        .final-sales-notice {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 5px solid #ffc107;
+            display: none;
+        }
+        .grand-total-row {
+            font-weight: bold;
+            background-color: #d4edda !important;
+        }
+        .branch-select-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .branch-select-container select {
+            width: 250px;
+            padding: 12px;
+            border-radius: 5px;
+            border: 2px solid #2c3e50;
+        }
+        .time-entry {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+        }
+        .time-entry h4 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .time-selector {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="Papa-Johns.png" alt="Papa-Johns.png" width="70" height="50">
+        <h1>Sales Papa John's Alex</h1>
+        
+        <div class="clock" id="clock"></div>
+
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">
+                    <i class="fas fa-home me-2"></i>Branch Data Entry
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="false">
+                    <i class="fas fa-chart-bar me-2"></i>Summary Report
+                </button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="myTabContent">
+            <!-- Main Tab -->
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="branch-select-container">
+                    <label for="branchSelect"><strong>Choose Your Branch:</strong></label>
+                    <select id="branchSelect">
+                        <option value="">-- Select Branch --</option>
+                        <option value="branch1">Amwaj</option>
+                        <option value="branch2">Hacienda</option>
+                        <option value="branch3">Lavista</option>
+                        <option value="branch4">Marasi</option>
+                        <option value="branch5">Marsilia</option>
+                        <option value="branch6">Marina 4</option>
+                        <option value="branch7">Chill Out</option>
+                        <option value="branch8">Carrefour</option>
+                        <option value="branch9">Fouad St</option>
+                        <option value="branch10">Stanly</option>
+                        <option value="branch11">Beshr</option>
+                        <option value="branch12">Mandara</option>
+                        <option value="branch13">Smoha</option>
+                        <option value="branch14">Smoha2</option>
+                        <option value="branch15">Syouf</option>
+                    </select>
+                </div>
+
+                <div id="branch1" class="branch-section">
+                    <h2>Amwaj</h2>
+                    
+                    <div class="time-selector">
+                        <label for="timeSelect1"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect1" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry1">
+                        <h4 id="selectedTimeTitle1">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales1">Sales:</label>
+                            <input type="number" id="sales1" placeholder="Input Sales" class="branch-input" data-branch="amwaj" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations1">T.C:</label>
+                            <input type="number" id="operations1" placeholder="Input T.C" class="branch-input" data-branch="amwaj" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section1">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales1">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales1" placeholder="Monthly Sales" class="monthly-input" data-branch="amwaj" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations1">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations1" placeholder="Monthly Operations" class="monthly-input" data-branch="amwaj" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice1">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+                <!-- Repeat for other branches (simplified for brevity) -->
+                <div id="branch2" class="branch-section">
+                    <h2>Hacienda</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect2"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect2" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry2">
+                        <h4 id="selectedTimeTitle2">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales2">Sales:</label>
+                            <input type="number" id="sales2" placeholder="Input Sales" class="branch-input" data-branch="hacienda" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations2">T.C:</label>
+                            <input type="number" id="operations2" placeholder="Input T.C" class="branch-input" data-branch="hacienda" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section2">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales2">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales2" placeholder="Monthly Sales" class="monthly-input" data-branch="hacienda" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations2">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations2" placeholder="Monthly Operations" class="monthly-input" data-branch="hacienda" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice2">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+                <div id="branch3" class="branch-section">
+                    <h2>lavista</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect3"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect3" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry2">
+                        <h4 id="selectedTimeTitle3">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales3">Sales:</label>
+                            <input type="number" id="sales3" placeholder="Input Sales" class="branch-input" data-branch="lavista" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations3">T.C:</label>
+                            <input type="number" id="operations3" placeholder="Input T.C" class="branch-input" data-branch="lavista" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section3">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales3">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales3" placeholder="Monthly Sales" class="monthly-input" data-branch="lavista" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations3">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations3" placeholder="Monthly Operations" class="monthly-input" data-branch="lavista" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice3">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+                <div id="branch4" class="branch-section">
+                    <h2>marasi</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect4"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect4" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry4">
+                        <h4 id="selectedTimeTitle4">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales4">Sales:</label>
+                            <input type="number" id="sales4" placeholder="Input Sales" class="branch-input" data-branch="marasi" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations4">T.C:</label>
+                            <input type="number" id="operations4" placeholder="Input T.C" class="branch-input" data-branch="marasi" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section4">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales4">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales4" placeholder="Monthly Sales" class="monthly-input" data-branch="marasi" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations4">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations4" placeholder="Monthly Operations" class="monthly-input" data-branch="marasi" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice4">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+                <div id="branch5" class="branch-section">
+                    <h2>marsilia</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect5"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect5" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry2">
+                        <h4 id="selectedTimeTitle5">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales5">Sales:</label>
+                            <input type="number" id="sales5" placeholder="Input Sales" class="branch-input" data-branch="marsilia" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations5">T.C:</label>
+                            <input type="number" id="operations5" placeholder="Input T.C" class="branch-input" data-branch="marsilia" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section5">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales5">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales5" placeholder="Monthly Sales" class="monthly-input" data-branch="marsilia" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations5">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations5" placeholder="Monthly Operations" class="monthly-input" data-branch="marsilia" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice5">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+                <div id="branch6" class="branch-section">
+                    <h2>marina4</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect6"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect6" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry6">
+                        <h4 id="selectedTimeTitle6">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales6">Sales:</label>
+                            <input type="number" id="sales6" placeholder="Input Sales" class="branch-input" data-branch="marina4" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations6">T.C:</label>
+                            <input type="number" id="operations6" placeholder="Input T.C" class="branch-input" data-branch="marina4" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section6">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales6">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales6" placeholder="Monthly Sales" class="monthly-input" data-branch="marina4" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations6">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations6" placeholder="Monthly Operations" class="monthly-input" data-branch="marina4" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice6">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+                <div id="branch7" class="branch-section">
+                    <h2>chill out</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect7"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect7" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry7">
+                        <h4 id="selectedTimeTitle7">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales7">Sales:</label>
+                            <input type="number" id="sales7" placeholder="Input Sales" class="branch-input" data-branch="chillout" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations7">T.C:</label>
+                            <input type="number" id="operations7" placeholder="Input T.C" class="branch-input" data-branch="chillout" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section7">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales7">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales7" placeholder="Monthly Sales" class="monthly-input" data-branch="chillout" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations7">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations7" placeholder="Monthly Operations" class="monthly-input" data-branch="chillout" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice7">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+                <div id="branch8" class="branch-section">
+                    <h2>carrefour</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect8"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect8" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry8">
+                        <h4 id="selectedTimeTitle8">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales8">Sales:</label>
+                            <input type="number" id="sales8" placeholder="Input Sales" class="branch-input" data-branch="carrefour" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations8">T.C:</label>
+                            <input type="number" id="operations8" placeholder="Input T.C" class="branch-input" data-branch="carrefour" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section8">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales8">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales8" placeholder="Monthly Sales" class="monthly-input" data-branch="carrefour" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations8">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations8" placeholder="Monthly Operations" class="monthly-input" data-branch="carrefour" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice8">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+                <div id="branch9" class="branch-section">
+                    <h2>fouadst</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect9"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect9" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry9">
+                        <h4 id="selectedTimeTitle9">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales9">Sales:</label>
+                            <input type="number" id="sales9" placeholder="Input Sales" class="branch-input" data-branch="fouadst" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations9">T.C:</label>
+                            <input type="number" id="operations9" placeholder="Input T.C" class="branch-input" data-branch="fouadst" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section9">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales9">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales9" placeholder="Monthly Sales" class="monthly-input" data-branch="fouadst" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations9">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations9" placeholder="Monthly Operations" class="monthly-input" data-branch="fouadst" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice9">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+                <div id="branch10" class="branch-section">
+                    <h2>stanly</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect10"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect10" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry10">
+                        <h4 id="selectedTimeTitle10">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales10">Sales:</label>
+                            <input type="number" id="sales10" placeholder="Input Sales" class="branch-input" data-branch="stanly" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations10">T.C:</label>
+                            <input type="number" id="operations10" placeholder="Input T.C" class="branch-input" data-branch="stanly" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section10">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales10">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales2" placeholder="Monthly Sales" class="monthly-input" data-branch="stanly" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations10">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations10" placeholder="Monthly Operations" class="monthly-input" data-branch="stanly" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice10">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+                <div id="branch11" class="branch-section">
+                    <h2>Beshr</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect11"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect11" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry11">
+                        <h4 id="selectedTimeTitle11">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales11">Sales:</label>
+                            <input type="number" id="sales11" placeholder="Input Sales" class="branch-input" data-branch="beshr" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations11">T.C:</label>
+                            <input type="number" id="operations11" placeholder="Input T.C" class="branch-input" data-branch="beshr" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section11">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales11">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales11" placeholder="Monthly Sales" class="monthly-input" data-branch="beshr" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations11">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations11" placeholder="Monthly Operations" class="monthly-input" data-branch="beshr" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice11">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+                    
+
+               <div id="branch12" class="branch-section">
+                    <h2>mandara</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect12"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect12" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry2">
+                        <h4 id="selectedTimeTitle12">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales12">Sales:</label>
+                            <input type="number" id="sales12" placeholder="Input Sales" class="branch-input" data-branch="mandara" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations12">T.C:</label>
+                            <input type="number" id="operations12" placeholder="Input T.C" class="branch-input" data-branch="mandara" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section12">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales12">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales12" placeholder="Monthly Sales" class="monthly-input" data-branch="mandara" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations12">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations12" placeholder="Monthly Operations" class="monthly-input" data-branch="mandara" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice12">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+               <div id="branch13" class="branch-section">
+                    <h2>smoha</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect13"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect13" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry2">
+                        <h4 id="selectedTimeTitle13">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales13">Sales:</label>
+                            <input type="number" id="sales13" placeholder="Input Sales" class="branch-input" data-branch="smoha" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations13">T.C:</label>
+                            <input type="number" id="operations13" placeholder="Input T.C" class="branch-input" data-branch="smoha" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section13">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales13">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales13" placeholder="Monthly Sales" class="monthly-input" data-branch="smoha" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations13">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations13" placeholder="Monthly Operations" class="monthly-input" data-branch="smoha" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice13">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+                <div id="branch14" class="branch-section">
+                    <h2>smoha 2</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect14"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect14" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry14">
+                        <h4 id="selectedTimeTitle14">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales14">Sales:</label>
+                            <input type="number" id="sales14" placeholder="Input Sales" class="branch-input" data-branch="smoha2" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations14">T.C:</label>
+                            <input type="number" id="operations14" placeholder="Input T.C" class="branch-input" data-branch="smoha2" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section14">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales14">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales14" placeholder="Monthly Sales" class="monthly-input" data-branch="smoha2" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations14">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations14" placeholder="Monthly Operations" class="monthly-input" data-branch="smoha2" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice14">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+
+                <div id="branch15" class="branch-section">
+                    <h2>Syouf</h2>
+                    <div class="time-selector">
+                        <label for="timeSelect15"><strong>Select Time Period:</strong></label>
+                        <select id="timeSelect15" class="time-period-select">
+                            <option value="">-- Select Time --</option>
+                            <option value="time1">3 PM - 6 PM</option>
+                            <option value="time2">6 PM - 9 PM</option>
+                            <option value="time3">9 PM - 12 AM</option>
+                            <option value="time4">12 AM - 3 AM</option>
+                            <option value="time5">3 AM - 6 AM (Final Sales)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-entry" id="timeEntry2">
+                        <h4 id="selectedTimeTitle15">Please select a time period</h4>
+                        <div class="form-group">
+                            <label for="sales15">Sales:</label>
+                            <input type="number" id="sales15" placeholder="Input Sales" class="branch-input" data-branch="syouf" data-type="sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="operations15">T.C:</label>
+                            <input type="number" id="operations15" placeholder="Input T.C" class="branch-input" data-branch="syouf" data-type="operations">
+                        </div>
+                    </div>
+                    
+                    <div class="monthly-section" id="monthly-section15">
+                        <h3>Monthly Sales & Operations</h3>
+                        <div class="form-group">
+                            <label for="monthly-sales15">Monthly Sales:</label>
+                            <input type="number" id="monthly-sales15" placeholder="Monthly Sales" class="monthly-input" data-branch="syouf" data-type="monthly-sales">
+                        </div>
+                        <div class="form-group">
+                            <label for="monthly-operations15">Monthly Operations:</label>
+                            <input type="number" id="monthly-operations15" placeholder="Monthly Operations" class="monthly-input" data-branch="syouf" data-type="monthly-operations">
+                        </div>
+                    </div>
+                    
+                    <div class="final-sales-notice" id="final-notice15">
+                        <i class="fas fa-info-circle"></i> Final sales entered. You can now input monthly sales data.
+                    </div>
+                </div>
+
+
+                <!-- Add other branches similarly -->
+
+                <a href="#" class="export-btn" onclick="generateSummaryReport()"> Send Data </a>
+            </div>
+            
+            <!-- Reports Tab -->
+            <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+                <div class="summary-table">
+                    <h3 class="section-title"><i class="fas fa-chart-pie me-2"></i>Daily Sales Report</h3>
+                    
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Branch Name</th>
+                                    <th>3PM-6PM Sales</th>
+                                    <th>6PM-9PM Sales</th>
+                                    <th>9PM-12AM Sales</th>
+                                    <th>12AM-3AM Sales</th>
+                                    <th>3AM-6AM Sales</th>
+                                    <th>Total Sales</th>
+                                    <th>Total T.C</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dailyReportBody">
+                                <!-- Rows will be generated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="summary-table">
+                    <h3 class="section-title"><i class="fas fa-calendar me-2"></i>Monthly Sales Report</h3>
+                    
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Branch Name</th>
+                                    <th>Monthly Sales</th>
+                                    <th>Monthly Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthlyReportBody">
+                                <!-- Rows will be generated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="summary-table">
+                    <h3 class="section-title"><i class="fas fa-chart-line me-2"></i>Grand Totals</h3>
+                    
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="grandTotalBody">
+                                <tr>
+                                    <td>Total Daily Sales</td>
+                                    <td id="totalDailySales">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Daily T.C</td>
+                                    <td id="totalDailyOperations">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Monthly Sales</td>
+                                    <td id="totalMonthlySales">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Monthly Operations</td>
+                                    <td id="totalMonthlyOperations">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>By Ahmed Okasha 2025 ©</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // بيانات التخزين للفروع مع المواقيت
+        const branchData = {
+            "amwaj": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "hacienda": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "lavista": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "marasi": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "marsilia": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "marina4": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "chillout": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "carrefour": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "fouadst": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "stanly": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "beshr": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "mandara": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "smoha": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "smoha2": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            },
+            "syouf": { 
+                time1: { sales: 0, operations: 0 },
+                time2: { sales: 0, operations: 0 },
+                time3: { sales: 0, operations: 0 },
+                time4: { sales: 0, operations: 0 },
+                time5: { sales: 0, operations: 0 },
+                monthlySales: 0,
+                monthlyOperations: 0,
+                currentTime: ""
+            }
+        };
+
+        // تحديث الساعة والتاريخ
+        function updateClock() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const date = now.toLocaleDateString('EN-EG', options);
+            const time = now.toLocaleTimeString('EN-EG');
+            document.getElementById('clock').innerHTML = `${date}<br>${time}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // تغيير الفرع
+        const branchSelect = document.getElementById('branchSelect');
+        const branchSections = document.querySelectorAll('.branch-section');
+
+        branchSelect.addEventListener('change', function() {
+            branchSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            const selectedBranch = document.getElementById(branchSelect.value);
+            if (selectedBranch) {
+                selectedBranch.classList.add('active');
+            }
+        });
+
+        // إضافة معالجات الأحداث لقوائم التوقيت
+        document.querySelectorAll('.time-period-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const branchNum = this.id.replace('timeSelect', '');
+                const selectedTime = this.value;
+                const titleElement = document.getElementById(`selectedTimeTitle${branchNum}`);
+                
+                if (selectedTime) {
+                    const timeLabels = {
+                        'time1': '3 PM - 6 PM',
+                        'time2': '6 PM - 9 PM',
+                        'time3': '9 PM - 12 AM',
+                        'time4': '12 AM - 3 AM',
+                        'time5': '3 AM - 6 AM (Final Sales)'
+                    };
+                    
+                    titleElement.textContent = timeLabels[selectedTime];
+                    
+                    // تحديث الوقت الحالي للفرع
+                    const branchName = document.querySelector(`#branch${branchNum} .branch-input`).getAttribute('data-branch');
+                    branchData[branchName].currentTime = selectedTime;
+                    
+                    // إذا كان الوقت النهائي، إظهار قسم المبيعات الشهرية
+                    if (selectedTime === 'time5') {
+                        document.getElementById(`monthly-section${branchNum}`).style.display = 'block';
+                        document.getElementById(`final-notice${branchNum}`).style.display = 'block';
+                    } else {
+                        document.getElementById(`monthly-section${branchNum}`).style.display = 'none';
+                        document.getElementById(`final-notice${branchNum}`).style.display = 'none';
+                    }
+                } else {
+                    titleElement.textContent = 'Please select a time period';
+                }
+            });
+        });
+
+        // تحديث بيانات الفرع عند إدخال القيم
+        document.querySelectorAll('.branch-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const branch = this.getAttribute('data-branch');
+                const type = this.getAttribute('data-type');
+                const value = parseFloat(this.value) || 0;
+                const currentTime = branchData[branch].currentTime;
+                
+                if (currentTime) {
+                    branchData[branch][currentTime][type] = value;
+                }
+            });
+        });
+
+        // تحديث البيانات الشهرية
+        document.querySelectorAll('.monthly-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const branch = this.getAttribute('data-branch');
+                const type = this.getAttribute('data-type');
+                const value = parseFloat(this.value) || 0;
+                
+                if (type === 'monthly-sales') {
+                    branchData[branch].monthlySales = value;
+                } else if (type === 'monthly-operations') {
+                    branchData[branch].monthlyOperations = value;
+                }
+            });
+        });
+
+        // توليد تقرير الملخص
+        function generateSummaryReport() {
+            const dailyReportBody = document.getElementById('dailyReportBody');
+            const monthlyReportBody = document.getElementById('monthlyReportBody');
+            
+            dailyReportBody.innerHTML = '';
+            monthlyReportBody.innerHTML = '';
+            
+            let totalDailySales = 0;
+            let totalDailyOperations = 0;
+            let totalMonthlySales = 0;
+            let totalMonthlyOperations = 0;
+            
+            // إنشاء صفوف للتقارير اليومية والشهرية
+            for (const [branchKey, branch] of Object.entries(branchData)) {
+                const branchName = formatBranchName(branchKey);
+                
+                // حساب الإجماليات اليومية
+                const time1Sales = branch.time1.sales || 0;
+                const time2Sales = branch.time2.sales || 0;
+                const time3Sales = branch.time3.sales || 0;
+                const time4Sales = branch.time4.sales || 0;
+                const time5Sales = branch.time5.sales || 0;
+                
+                const time1Operations = branch.time1.operations || 0;
+                const time2Operations = branch.time2.operations || 0;
+                const time3Operations = branch.time3.operations || 0;
+                const time4Operations = branch.time4.operations || 0;
+                const time5Operations = branch.time5.operations || 0;
+                
+                const totalSales = time1Sales + time2Sales + time3Sales + time4Sales + time5Sales;
+                const totalOperations = time1Operations + time2Operations + time3Operations + time4Operations + time5Operations;
+                
+                totalDailySales += totalSales;
+                totalDailyOperations += totalOperations;
+                
+                // إضافة صف للتقرير اليومي
+                const dailyRow = document.createElement('tr');
+                dailyRow.innerHTML = `
+                    <td>${branchName}</td>
+                    <td>${time1Sales.toFixed(0)}</td>
+                    <td>${time2Sales.toFixed(0)}</td>
+                    <td>${time3Sales.toFixed(0)}</td>
+                    <td>${time4Sales.toFixed(0)}</td>
+                    <td>${time5Sales.toFixed(0)}</td>
+                    <td>${totalSales.toFixed(0)}</td>
+                    <td>${totalOperations.toFixed(0)}</td>
+                `;
+                dailyReportBody.appendChild(dailyRow);
+                
+                // إضافة صف للتقرير الشهري
+                const monthlySales = branch.monthlySales || 0;
+                const monthlyOperations = branch.monthlyOperations || 0;
+                
+                totalMonthlySales += monthlySales;
+                totalMonthlyOperations += monthlyOperations;
+                
+                const monthlyRow = document.createElement('tr');
+                monthlyRow.innerHTML = `
+                    <td>${branchName}</td>
+                    <td>${monthlySales.toFixed(0)}</td>
+                    <td>${monthlyOperations.toFixed(0)}</td>
+                `;
+                monthlyReportBody.appendChild(monthlyRow);
+            }
+            
+            // تحديث الإجماليات
+            document.getElementById('totalDailySales').textContent = totalDailySales.toFixed(0);
+            document.getElementById('totalDailyOperations').textContent = totalDailyOperations.toFixed(0);
+            
+            document.getElementById('totalMonthlySales').textContent = totalMonthlySales.toFixed(0);
+            document.getElementById('totalMonthlyOperations').textContent = totalMonthlyOperations.toFixed(0);
+            
+            // الانتقال إلى تبويب التقارير
+            const reportsTab = new bootstrap.Tab(document.getElementById('reports-tab'));
+            reportsTab.show();
+            
+            alert('Data has been sent successfully!');
+        }
+        
+        // دالة لتحويل اسم الفرع إلى صيغة مناسبة للعرض
+        function formatBranchName(key) {
+            const names = {
+                'amwaj': 'Amwaj',
+                'hacienda': 'Hacienda',
+                'lavista': 'Lavista',
+                'marasi': 'Marasi',
+                'marsilia': 'Marsilia',
+                'marina4': 'Marina 4',
+                'chillout': 'Chill Out',
+                'carrefour': 'Carrefour',
+                'fouadst': 'Fouad St',
+                'stanly': 'Stanly',
+                'beshr': 'Beshr',
+                'mandara': 'Mandara',
+                'smoha': 'Smoha',
+                'smoha2': 'Smoha2',
+                'syouf': 'Syouf'
+            };
+            
+            return names[key] || key;
+        }
+    </script>
+
+</body>
+</html>
